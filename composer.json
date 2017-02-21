@@ -1,9 +1,10 @@
 {
-  "name": "xutl/yii2-message",
-  "description": "The message extension for the Yii framework",
+  "name": "xutl/yii2-mq",
+  "description": "The message queue extension for the Yii framework",
   "keywords": [
     "yii2",
-    "message"
+    "message",
+    "queue"
   ],
   "type": "yii2-extension",
   "license": "BSD-3-Clause",
@@ -14,7 +15,8 @@
     }
   ],
   "require": {
-    "yiisoft/yii2": "~2.0.0"
+    "yiisoft/yii2": "~2.0",
+    "xutl/aliyunmns": "~1.0"
   },
   "require-dev": {
     "aws/aws-sdk-php": "~3.0",
@@ -22,7 +24,7 @@
   },
   "autoload": {
     "psr-4": {
-      "xutl\\message\\": ""
+      "xutl\\mq\\": ""
     }
   }
 }
