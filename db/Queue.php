@@ -88,7 +88,7 @@ class Queue extends Object implements QueueInterface
         $m = Json::decode($message['payload']);
         return $message ? [
             'messageId' => $message['id'],
-            'MessageBody' => $m['body'],
+            'messageBody' => $m['body'],
             'receiptHandle' => $receiptHandle,
             'queue' => $this->queueName,
         ] : false;

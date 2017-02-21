@@ -38,7 +38,7 @@ class QueueController extends Controller
      * @var string
      * Queue component ID
      */
-    public $queue = 'queue';
+    public $queue = 'mq';
 
     /**
      * @var string the ID of the action that is used when the action ID is not specified
@@ -93,7 +93,6 @@ class QueueController extends Controller
                 } else {
                     Yii::trace(sprintf('Wait %s second and continue.', $this->_sleep));
                 }
-                sleep($this->_sleep);
             }
         }
     }
@@ -106,24 +105,24 @@ class QueueController extends Controller
      */
     protected function process($queue)
     {
-        $message = $this->getQueue()->pop($queue);
+        $message = $this->getQueue()->receiveMessage($queue);
         if ($message) {
             try {
-                /** @var \xutl\queue\ActiveJob $job */
-                $job = call_user_func($message['body']['serializer'][1], $message['body']['object']);
+                /** @var \xutl\mq\Job $job */
+                $job = call_user_func($message['messageBody']['serializer'][1], $message['messageBody']['object']);
                 if (!$this->_daemonize) {
                     $this->stdout(sprintf('Begin executing a job `%s`...', get_class($job)) . PHP_EOL);
                 } else {
                     Yii::trace(sprintf('Begin executing a job `%s`...', get_class($job)));
                 }
                 if ($job->run() || (bool)$this->restartOnFailure === false) {
-                    $this->getQueue()->delete($message);
-                } else {
-                    $this->getQueue()->release($message, 60);
+                    $this->getQueue()->deleteMessage($message['receiptHandle']);
+                } else {//执行失败60秒后重试
+                    $this->getQueue()->changeMessageVisibility($message['receiptHandle'], 600);
                 }
                 return true;
             } catch (\Exception $e) {
-                $this->getQueue()->delete($message);
+                $this->getQueue()->deleteMessage($message);
                 Yii::error($e->getMessage(), __METHOD__);
             }
         }
@@ -152,7 +151,7 @@ class QueueController extends Controller
 
     /**
      * 获取队列
-     * @return \xutl\queue\QueueInterface
+     * @return \xutl\mq\MessageQueue
      * @throws \yii\base\InvalidConfigException
      */
     private function getQueue()

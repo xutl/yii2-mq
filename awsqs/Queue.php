@@ -58,10 +58,10 @@ class Queue extends Object implements QueueInterface
         $data = reset($response['Messages']);
 
         return [
-            'id' => $data['MessageId'],
-            'body' => $data['Body'],
+            'messageId' => $data['MessageId'],
+            'messageBody' => $data['Body'],
             'queue' => $this->queueName,
-            'receipt-handle' => $data['ReceiptHandle'],
+            'receiptHandle' => $data['ReceiptHandle'],
         ];
     }
 

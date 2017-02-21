@@ -15,7 +15,28 @@ use yii\base\Object;
 class Message extends Object
 {
 
-    public $id;
-    public $type;
-    public $body;
+    /**
+     * @var string 消息事件
+     */
+    public $event;
+
+    /**
+     * @var string 消息ID
+     */
+    public $messageId;
+
+    /**
+     * @var array|string 解析后的消息内容
+     */
+    public $messageBody;
+
+    /**
+     * @var string 消息内容
+     */
+    public $receiptHandle;
+
+    /**
+     * @var string 所属队列
+     */
+    public $queue;
 }

@@ -78,9 +78,10 @@ class Queue extends Object implements QueueInterface
             $response = $this->queue->receiveMessage(30);
             if ($response->isSucceed()) {
                 return [
-                    'MessageBody' => Json::decode($response->getMessageBody()),
+                    'messageBody' => Json::decode($response->getMessageBody()),
                     'messageId' => $response->getMessageId(),
                     'receiptHandle' => $response->getReceiptHandle(),
+                    'queue' => $this->queueName
                 ];
             } else {
                 return false;
