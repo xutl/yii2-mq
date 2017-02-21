@@ -10,8 +10,6 @@ namespace xutl\mq;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
-use xutl\mq\ClientInterface;
-use xutl\mq\QueueInterface;
 
 /**
  * Class MessageQueue
@@ -49,5 +47,54 @@ class MessageQueue extends Component
     public function getQueueRef($queueName)
     {
         return $this->client->getQueueRef($queueName);
+    }
+
+    /**
+     * 快速发送消息
+     * @param string $queueName
+     * @param array|string $message
+     * @param int $delay
+     * @return mixed
+     */
+    public function sendMessage($queueName, $message, $delay = 0)
+    {
+        $queue = $this->getQueueRef($queueName);
+        return $queue->sendMessage($message, $delay);
+    }
+
+    /**
+     * 消费消息
+     * @param string $queueName
+     * @return array
+     */
+    public function receiveMessage($queueName)
+    {
+        $queue = $this->getQueueRef($queueName);
+        return $queue->receiveMessage();
+    }
+
+    /**
+     * 修改消息可见性
+     * @param string $queueName
+     * @param string $receiptHandle
+     * @param int $visibilityTimeout
+     * @return bool
+     */
+    public function changeMessageVisibility($queueName, $receiptHandle, $visibilityTimeout)
+    {
+        $queue = $this->getQueueRef($queueName);
+        return $queue->changeMessageVisibility($receiptHandle, $visibilityTimeout);
+    }
+
+    /**
+     * 删除消息
+     * @param string $queueName
+     * @param string $receiptHandle
+     * @return bool
+     */
+    public function deleteMessage($queueName, $receiptHandle)
+    {
+        $queue = $this->getQueueRef($queueName);
+        return $queue->deleteMessage($receiptHandle);
     }
 }
