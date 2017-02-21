@@ -74,7 +74,7 @@ class QueueController extends Controller
      * @return bool
      * @throws \Exception
      */
-    public function actionListen($queue)
+    public function actionListen($queue = null)
     {
         while (true) {
             if ($this->_timeout !== null) {

@@ -22,10 +22,17 @@ class MessageQueue extends Component
      */
     private $client;
 
+
     /**
      * @var array 驱动配置
      */
     public $driver;
+
+    /**
+     * 默认队列
+     * @var string
+     */
+    public $defaultQueue = 'default';
 
     /**
      * @inheritdoc
@@ -44,9 +51,9 @@ class MessageQueue extends Component
      * @param string $queueName
      * @return QueueInterface
      */
-    public function getQueueRef($queueName)
+    public function getQueueRef($queueName = null)
     {
-        return $this->client->getQueueRef($queueName);
+        return $this->client->getQueueRef($queueName ? $queueName : $this->defaultQueue);
     }
 
     /**
@@ -56,7 +63,7 @@ class MessageQueue extends Component
      * @param int $delay
      * @return mixed
      */
-    public function sendMessage($queueName, $message, $delay = 0)
+    public function sendMessage($message, $delay = 0, $queueName = null)
     {
         $queue = $this->getQueueRef($queueName);
         return $queue->sendMessage($message, $delay);
@@ -67,7 +74,7 @@ class MessageQueue extends Component
      * @param string $queueName
      * @return array
      */
-    public function receiveMessage($queueName)
+    public function receiveMessage($queueName = null)
     {
         $queue = $this->getQueueRef($queueName);
         return $queue->receiveMessage();
@@ -80,7 +87,7 @@ class MessageQueue extends Component
      * @param int $visibilityTimeout
      * @return bool
      */
-    public function changeMessageVisibility($queueName, $receiptHandle, $visibilityTimeout)
+    public function changeMessageVisibility($receiptHandle, $visibilityTimeout, $queueName = null)
     {
         $queue = $this->getQueueRef($queueName);
         return $queue->changeMessageVisibility($receiptHandle, $visibilityTimeout);
@@ -92,7 +99,7 @@ class MessageQueue extends Component
      * @param string $receiptHandle
      * @return bool
      */
-    public function deleteMessage($queueName, $receiptHandle)
+    public function deleteMessage($receiptHandle, $queueName = null)
     {
         $queue = $this->getQueueRef($queueName);
         return $queue->deleteMessage($receiptHandle);

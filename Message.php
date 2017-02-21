@@ -15,4 +15,7 @@ use yii\base\Object;
 class Message extends Object
 {
 
+    public $id;
+    public $type;
+    public $body;
 }
