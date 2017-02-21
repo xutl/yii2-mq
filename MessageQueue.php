@@ -22,7 +22,6 @@ class MessageQueue extends Component
      */
     private $client;
 
-
     /**
      * @var array 驱动配置
      */

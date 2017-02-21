@@ -39,11 +39,14 @@ to the require section of your `composer.json` file.
 
 ###控制台配置
 ````php
-    'controllerMap' => [
-        'queue' => [
-            'class' => 'xutl\mq\console\QueueController',
+'controllerMap' => [
+    'queue' => [
+        'class' => 'xutl\mq\console\QueueController',
+        'listen' => [//自己设置一个监听消息和处理程序
+            'mail.sent' => ['\console\queue\Mail', 'sent'],
         ],
     ],
+],
 ````    
     
 ###组件配置
@@ -118,7 +121,10 @@ Usage
 $mq = Yii::$app->get('mq');
 $queue = $message->getQueueRef('default');
 
-$m = ['aa' => 'bb'];
+$m = [
+    'event' => 'mail.sent',//上面有监听处理程序，
+    //etc...
+];
 //入队
 for ($i = 1; $i <= 500; $i++) {
     $queue->sendMessage($m,10);

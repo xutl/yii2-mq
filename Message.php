@@ -6,19 +6,17 @@
  */
 namespace xutl\mq;
 
+use yii\base\Arrayable;
 use yii\base\Object;
+use yii\base\ArrayableTrait;
 
 /**
  * Class Message
  * @package xutl\mq
  */
-class Message extends Object
+class Message extends Object implements Arrayable
 {
-
-    /**
-     * @var string 消息事件
-     */
-    public $event;
+    use ArrayableTrait;
 
     /**
      * @var string 消息ID
