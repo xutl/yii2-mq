@@ -40,11 +40,10 @@ class Queue extends Object implements QueueInterface
      */
     public function sendMessage($message, $delay = 0)
     {
-        $this->db->createCommand()->insert('{{%queue}}', [
+        $payload = Json::encode(['id' => $id = md5(uniqid('', true)), 'body' => $message]);
+        $this->db->createCommand()->insert('{{%message_queue}}', [
             'queue' => $this->queueName,
-            'reserved' => false,
-            'reserved_at' => null,
-            'payload' => Json::encode($message),
+            'payload' => $payload,
             'available_at' => time() + $delay,
             'created_at' => time(),
         ])->execute();
@@ -57,38 +56,42 @@ class Queue extends Object implements QueueInterface
      */
     public function receiveMessage()
     {
-        //遍历保留和等待
-        foreach ([':delayed', ':reserved'] as $type) {
-            $options = ['cas' => true, 'watch' => $this->queueName . $type];
-            $this->client->transaction($options, function (MultiExec $transaction) use ($type) {
-                $data = $this->client->zrangebyscore($this->queueName . $type, '-inf', $time = time());
-                if (!empty($data)) {
-                    $transaction->zremrangebyscore($this->queueName . $type, '-inf', $time);
-                    //压入队列
-                    foreach ($data as $payload) {
-                        $transaction->rpush($this->queueName, [$payload]);
-                    }
-                }
-            });
+        //准备事务
+        if (($message = $this->pop()) != false) {
+            $transaction = $this->db->beginTransaction();
+            try {
+                $this->db->createCommand("UPDATE {{%message_queue}} SET available_at=:available_at WHERE id=:id")
+                    ->bindValue(':available_at', time() + $this->expire)
+                    ->bindValue(':id', $message['messageId'])
+                    ->execute();
+                $transaction->commit();
+                return $message;
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                return false;
+            }
         }
+        return false;
+    }
 
-        $data = $this->client->lpop($this->queueName);
-
-        if ($data === null) {
-            return false;
-        }
-
-        $this->client->zadd($this->queueName . ':reserved', [$data => time() + $this->expire]);
-
-        $receiptHandle = $data;
-        $data = Json::decode($data);
-
-        return [
-            'messageId' => $data['id'],
-            'MessageBody' => $data['body'],
+    /**
+     * 弹个消息出来
+     * @return array|bool
+     */
+    protected function pop()
+    {
+        $message = $this->db->createCommand('SELECT * FROM {{%message_queue}} WHERE queue=:queue AND available_at<=:available_at for update ')
+            ->bindValue(':queue', $this->queueName)
+            ->bindValue(':available_at', time())
+            ->queryOne();
+        $receiptHandle = $message['payload'];
+        $m = Json::decode($message['payload']);
+        return $message ? [
+            'messageId' => $message['id'],
+            'MessageBody' => $m['body'],
             'receiptHandle' => $receiptHandle,
             'queue' => $this->queueName,
-        ];
+        ] : false;
     }
 
     /**
@@ -99,12 +102,13 @@ class Queue extends Object implements QueueInterface
      */
     public function changeMessageVisibility($receiptHandle, $visibilityTimeout)
     {
-        $this->deleteMessage($receiptHandle);
-        if ($visibilityTimeout > 0) {
-            $this->client->zadd($this->queueName . ':delayed', [$receiptHandle => time() + $visibilityTimeout]);
-        } else {
-            $this->client->rpush($this->queueName, [$receiptHandle]);
-        }
+        $this->db->createCommand()->update(
+            '{{%message_queue}}',
+            [
+                'available_at' => time() + $visibilityTimeout,
+            ],
+            ['payload' => $receiptHandle]
+        )->execute();
     }
 
     /**
@@ -114,6 +118,6 @@ class Queue extends Object implements QueueInterface
      */
     public function deleteMessage($receiptHandle)
     {
-        $this->client->zrem($this->queueName . ':reserved', $receiptHandle);
+        $this->db->createCommand()->delete('{{%message_queue}}', ['payload' => $receiptHandle])->execute();
     }
 }
