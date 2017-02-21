@@ -17,6 +17,123 @@ https://help.aliyun.com/document_detail/27414.html?spm=5176.7944397.215405.1.hrJ
 
 支持阿里云的MNS，AWS的SQS，以及Redis。
 
+Installation
+------------
+
+The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+
+Either run
+
+```
+php composer.phar require --prefer-dist xutl/yii2-mq
+```
+
+or add
+
+```
+"xutl/yii2-mq": "~1.0.0"
+```
+
+to the require section of your `composer.json` file.
+
+###控制台配置
+````php
+    'controllerMap' => [
+        'queue' => [
+            'class' => 'xutl\mq\console\QueueController',
+        ],
+    ],
+````    
+    
+###组件配置
+````php
+//使用Redis
+'mq' => [
+    'class' => 'xutl\mq\MessageQueue',
+        'driver' => [
+            'class' => 'xutl\mq\redis\Client',
+            'redis' => [
+                'scheme' => 'tcp',
+                'host' => '127.0.0.1',
+                'port' => 6379,
+                //'password' => '1984111a',
+                'db' => 0
+            ],
+        ],
+],
+
+//使用AWS SQS
+'mq' => [
+    'class' => 'xutl\mq\MessageQueue',
+        'driver' => [
+            'class' => 'xutl\mq\awsqs\Client',
+            'sqs' => [
+                //etc
+            ],
+        ],
+],
+//使用阿里MNS
+'mq' => [
+    'class' => 'xutl\mq\MessageQueue',
+        'driver' => [
+            'class' => 'xutl\mq\alimns\Client',
+            'endPoint' => '',
+            'accessId'=>'',
+            'accessKey'=>'',
+        ],
+],        
+//DB模拟
+'mq' => [
+    'class' => 'xutl\mq\MessageQueue',
+        'driver' => [
+            'class' => 'xutl\mq\db\Client',
+            'db' => 'db',
+        ],
+],
+
+//DB模拟2
+'mq' => [
+    'class' => 'xutl\mq\MessageQueue',
+        'driver' => [
+            'class' => 'xutl\mq\db\Client',
+            'db' => [
+                'class' => 'yii\db\Connection',
+                'dsn' => 'mysql:host=localhost;dbname=yuncms',
+                'username' => 'root',
+                'password' => '',
+                'charset' => 'utf8',
+                'tablePrefix' => 'yun_',
+            ],
+        ],
+],
+````
+
+Usage
+-----
+
+```php
+
+/** @var \xutl\mq\MessageQueue $mq */
+$mq = Yii::$app->get('mq');
+$queue = $message->getQueueRef('default');
+
+$m = ['aa' => 'bb'];
+//入队
+for ($i = 1; $i <= 500; $i++) {
+    $queue->sendMessage($m,10);
+}
+
+for ($i = 1; $i <= 500; $i++) {
+    $message = $queue->receiveMessage();
+    //此处处理消息
+    /////..
+    
+    
+    //删除消息
+    $queue->deleteMessage($message['receiptHandle']);
+}
+        
+```
 
 知乎上这篇甩锅我给我很大的启发。
 https://zhuanlan.zhihu.com/p/25192112
