@@ -4,41 +4,14 @@
  * @copyright Copyright (c) 2012 TintSoft Technology Co. Ltd.
  * @license http://www.tintsoft.com/license/
  */
-namespace xutl\message\alimns;
+namespace xutl\mq\alimns;
 
 use Yii;
-use yii\helpers\Json;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
-use xutl\message\ClientInterface;
-use AliyunMNS\Queue;
-use AliyunMNS\Topic;
+use xutl\mq\ClientInterface;
 use AliyunMNS\Config;
-use AliyunMNS\AsyncCallback;
 use AliyunMNS\Http\HttpClient;
-use AliyunMNS\Exception\MnsException;
-
-use AliyunMNS\Model\QueueAttributes;
-use AliyunMNS\Requests\ListQueueRequest;
-use AliyunMNS\Responses\ListQueueResponse;
-use AliyunMNS\Requests\CreateQueueRequest;
-use AliyunMNS\Responses\CreateQueueResponse;
-use AliyunMNS\Requests\DeleteQueueRequest;
-use AliyunMNS\Responses\DeleteQueueResponse;
-
-use AliyunMNS\Model\TopicAttributes;
-use AliyunMNS\Requests\CreateTopicRequest;
-use AliyunMNS\Responses\CreateTopicResponse;
-use AliyunMNS\Requests\DeleteTopicRequest;
-use AliyunMNS\Responses\DeleteTopicResponse;
-use AliyunMNS\Requests\ListTopicRequest;
-use AliyunMNS\Responses\ListTopicResponse;
-
-use AliyunMNS\Model\AccountAttributes;
-use AliyunMNS\Requests\GetAccountAttributesRequest;
-use AliyunMNS\Responses\GetAccountAttributesResponse;
-use AliyunMNS\Requests\SetAccountAttributesRequest;
-use AliyunMNS\Responses\SetAccountAttributesResponse;
 
 class Client extends Component implements ClientInterface
 {
@@ -93,11 +66,14 @@ class Client extends Component implements ClientInterface
     /**
      * 获取队列
      * @param string $queueName
-     * @param bool $base64
      * @return Queue
      */
     public function getQueueRef($queueName)
     {
-        return new Queue($this->client, $queueName, true);
+        return new Queue([
+            'client' => $this->client,
+            'queueName' => $queueName,
+            'base64' => true
+        ]);
     }
 }
