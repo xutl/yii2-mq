@@ -45,6 +45,11 @@ class Client extends Component implements ClientInterface
      */
     private $client;
 
+	/**
+     * @var bool 默认关闭base64编码有些服务并不支持base64
+     */
+	public $base64 = false;
+
     /**
      * @inheritdoc
      */
@@ -73,7 +78,7 @@ class Client extends Component implements ClientInterface
         return new Queue([
             'client' => $this->client,
             'queueName' => $queueName,
-            'base64' => true
+            'base64' => $this->base64
         ]);
     }
 }
