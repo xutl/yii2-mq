@@ -37,7 +37,7 @@ php composer.phar require --prefer-dist xutl/yii2-mq
 or add
 
 ```
-"xutl/yii2-mq": "~1.0.0"
+"xutl/yii2-mq": "~1.0"
 ```
 
 to the require section of your `composer.json` file.
