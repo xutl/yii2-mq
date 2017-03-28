@@ -13,6 +13,7 @@ use yii\helpers\Json;
 use AliyunMNS\Queue as QueueBackend;
 use AliyunMNS\Requests\SendMessageRequest;
 use AliyunMNS\Exception\MnsException;
+use AliyunMNS\Model\SendMessageRequestItem;
 use AliyunMNS\Requests\BatchSendMessageRequest;
 
 /**
@@ -78,7 +79,7 @@ class Queue extends \xutl\mq\Queue
     public function batchSendMessage($messages, $delay = 0)
     {
         foreach ($messages as $key => $message) {
-            $messages[$key] = Json::encode($message);
+            $messages[$key] = new SendMessageRequestItem(Json::encode($message), $delay, null);
         }
         $request = new BatchSendMessageRequest($messages, $this->base64);
         try {
