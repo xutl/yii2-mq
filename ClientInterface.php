@@ -6,6 +6,10 @@
  */
 namespace xutl\mq;
 
+/**
+ * Interface ClientInterface
+ * @package xutl\mq
+ */
 interface ClientInterface
 {
     /**

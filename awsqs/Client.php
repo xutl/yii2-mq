@@ -7,7 +7,6 @@
 namespace xutl\mq\awsqs;
 
 use yii\base\Component;
-use yii\base\InvalidConfigException;
 use xutl\mq\ClientInterface;
 use Aws\Sqs\SqsClient;
 
@@ -18,7 +17,7 @@ use Aws\Sqs\SqsClient;
 class Client extends Component implements ClientInterface
 {
     /**
-     * @var SqsClient
+     * @var SqsClient|array
      */
     public $client;
 

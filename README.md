@@ -41,79 +41,52 @@ or add
 ```
 
 to the require section of your `composer.json` file.
-
-###控制台配置
-````php
-'controllerMap' => [
-    'queue' => [
-        'class' => 'xutl\mq\console\QueueController',
-        'listen' => [//自己设置一个监听消息和处理程序
-            'mail.sent' => ['\console\queue\Mail', 'sent'],
-        ],
-    ],
-],
-````
-    
+   
 ###组件配置
 ````php
 //使用Redis
 'mq' => [
-    'class' => 'xutl\mq\MessageQueue',
-        'driver' => [
-            'class' => 'xutl\mq\redis\Client',
-            'redis' => [
-                'scheme' => 'tcp',
-                'host' => '127.0.0.1',
-                'port' => 6379,
-                //'password' => '1984111a',
-                'db' => 0
-            ],
-        ],
+    'class' => 'xutl\mq\redis\Client',
+                'redis' => [
+                    'scheme' => 'tcp',
+                    'host' => '127.0.0.1',
+                    'port' => 6379,
+                    //'password' => '1984111a',
+                    'db' => 0
+                ],
 ],
 
 //使用AWS SQS
 'mq' => [
-    'class' => 'xutl\mq\MessageQueue',
-        'driver' => [
-            'class' => 'xutl\mq\awsqs\Client',
-            'sqs' => [
-                //etc
-            ],
-        ],
+    'class' => 'xutl\mq\awsqs\Client',
+                'sqs' => [
+                    //etc
+                ],
 ],
 //使用阿里MNS
 'mq' => [
-    'class' => 'xutl\mq\MessageQueue',
-        'driver' => [
-            'class' => 'xutl\mq\alimns\Client',
-            'endPoint' => '',
-            'accessId'=>'',
-            'accessKey'=>'',
-        ],
+   'class' => 'xutl\mq\alimns\Client',
+               'endPoint' => '',
+               'accessId'=>'',
+               'accessKey'=>'',
 ],        
 //DB模拟
 'mq' => [
-    'class' => 'xutl\mq\MessageQueue',
-        'driver' => [
-            'class' => 'xutl\mq\db\Client',
-            'db' => 'db',
-        ],
+    'class' => 'xutl\mq\db\Client',
+                'db' => 'db',
 ],
 
 //DB模拟2
 'mq' => [
-    'class' => 'xutl\mq\MessageQueue',
-        'driver' => [
-            'class' => 'xutl\mq\db\Client',
-            'db' => [
-                'class' => 'yii\db\Connection',
-                'dsn' => 'mysql:host=localhost;dbname=yuncms',
-                'username' => 'root',
-                'password' => '',
-                'charset' => 'utf8',
-                'tablePrefix' => 'yun_',
-            ],
-        ],
+    'class' => 'xutl\mq\db\Client',
+                'db' => [
+                    'class' => 'yii\db\Connection',
+                    'dsn' => 'mysql:host=localhost;dbname=yuncms',
+                    'username' => 'root',
+                    'password' => '',
+                    'charset' => 'utf8',
+                    'tablePrefix' => 'yun_',
+                ],
 ],
 ````
 
@@ -122,7 +95,7 @@ to the require section of your `composer.json` file.
 
 ```php
 
-/** @var \xutl\mq\MessageQueue $mq */
+/** @var \xutl\mq\alimns\Client $mq */
 $mq = Yii::$app->get('mq');
 $queue = $message->getQueueRef('default');
 
