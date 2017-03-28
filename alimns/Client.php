@@ -46,9 +46,9 @@ class Client extends Component implements ClientInterface
     private $client;
 
 	/**
-     * @var bool 默认关闭base64编码有些服务并不支持base64
+     * @var bool 是否开启Base 64
      */
-	public $base64 = false;
+	public $base64 = true;
 
     /**
      * @inheritdoc

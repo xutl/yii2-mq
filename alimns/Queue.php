@@ -74,25 +74,29 @@ class Queue extends \xutl\mq\Queue
      * 批量推送消息到队列
      * @param array $messages
      * @param int $delay
-     * @return false|string
+     * @return array
      */
     public function batchSendMessage($messages, $delay = 0)
     {
         foreach ($messages as $key => $message) {
             $messages[$key] = new SendMessageRequestItem(Json::encode($message), $delay, null);
         }
-        $request = new BatchSendMessageRequest($messages, $this->base64);
-        try {
-            $response = $this->queue->batchSendMessage($request);
-            if ($response->isSucceed()) {
-                return $response->getSendMessageResponseItems();
-            } else {
-                return false;
+        $count = count($messages);
+        $size = ceil(count($count) / 16);
+        $messages = array_chunk($messages, $size);
+        $responses = [];
+        foreach ($messages as $message) {
+            $request = new BatchSendMessageRequest($message, $this->base64);
+            try {
+                $response = $this->queue->batchSendMessage($request);
+                if ($response->isSucceed()) {
+                    $responses = array_merge($responses, $response->getSendMessageResponseItems());
+                }
+            } catch (MnsException $e) {
+                Yii::trace(sprintf('send Message Failed:  `%s`...', $e));
             }
-        } catch (MnsException $e) {
-            Yii::trace(sprintf('send Message Failed:  `%s`...', $e));
-            return false;
         }
+        return $responses;
     }
 
     /**
