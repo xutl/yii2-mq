@@ -44,6 +44,23 @@ class Queue extends Object implements QueueInterface
     }
 
     /**
+     * @param array $messages
+     * @param int $delay
+     * @return false|string
+     */
+    public function BatchSendMessage($messages, $delay = 0)
+    {
+        foreach ($messages as $key => $message) {
+            $messages[$key] = [
+                'QueueUrl' => $this->queueName,
+                'MessageBody' => Json::encode($message),
+                'DelaySeconds' => $delay,
+            ];
+        }
+        return $this->client->sendMessageBatch($messages)->get('MessageId');
+    }
+
+    /**
      * 获取消息
      * @return array|bool
      */

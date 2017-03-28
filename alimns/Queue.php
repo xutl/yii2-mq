@@ -4,6 +4,7 @@
  * @copyright Copyright (c) 2012 TintSoft Technology Co. Ltd.
  * @license http://www.tintsoft.com/license/
  */
+
 namespace xutl\mq\alimns;
 
 use Yii;
@@ -13,6 +14,7 @@ use xutl\mq\QueueInterface;
 use AliyunMNS\Queue as QueueBackend;
 use AliyunMNS\Requests\SendMessageRequest;
 use AliyunMNS\Exception\MnsException;
+use AliyunMNS\Requests\BatchSendMessageRequest;
 
 /**
  * Class Queue
@@ -69,6 +71,31 @@ class Queue extends Object implements QueueInterface
     }
 
     /**
+     * 批量推送消息到队列
+     * @param array $messages
+     * @param int $delay
+     * @return false|string
+     */
+    public function BatchSendMessage($messages, $delay = 0)
+    {
+        foreach ($messages as $key => $message) {
+            $messages[$key] = Json::encode($message);
+        }
+        $request = new BatchSendMessageRequest($messages, $this->base64);
+        try {
+            $response = $this->queue->sendMessage($request);
+            if ($response->isSucceed()) {
+                return $response->getMessageId();
+            } else {
+                return false;
+            }
+        } catch (MnsException $e) {
+            Yii::trace(sprintf('send Message Failed:  `%s`...', $e));
+            return false;
+        }
+    }
+
+    /**
      * 获取消息
      * @return array|bool
      */
@@ -107,7 +134,7 @@ class Queue extends Object implements QueueInterface
             } else {
                 return false;
             }
-        }catch (MnsException $e) {
+        } catch (MnsException $e) {
             Yii::trace(sprintf('receive Message Failed:  `%s`...', $e));
             return false;
         }

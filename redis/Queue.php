@@ -51,6 +51,24 @@ class Queue extends Object implements QueueInterface
     }
 
     /**
+     * 批量推送消息到队列
+     * @param array $messages
+     * @param int $delay
+     * @return false|string
+     */
+    public function BatchSendMessage($messages, $delay = 0)
+    {
+        $successCount = 0;
+        foreach ($messages as $key => $message) {
+            if ($this->sendMessage($message, $delay)) {
+                $successCount++;
+            }
+
+        }
+        return $successCount;
+    }
+
+    /**
      * 获取消息
      * @return array|bool
      */
