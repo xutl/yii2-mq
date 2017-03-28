@@ -11,7 +11,7 @@ interface ClientInterface
     /**
      * 获取队列名称
      * @param string $queueName
-     * @return QueueInterface
+     * @return Queue
      */
     public function getQueueRef($queueName);
 }

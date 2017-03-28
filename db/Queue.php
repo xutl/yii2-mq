@@ -9,15 +9,13 @@ namespace xutl\mq\db;
 
 use Yii;
 use yii\helpers\Json;
-use yii\base\Object;
 use yii\db\Connection;
-use xutl\mq\QueueInterface;
 
 /**
  * Class Queue
  * @package xutl\mq\db
  */
-class Queue extends Object implements QueueInterface
+class Queue extends \xutl\mq\Queue
 {
     /**
      * @var Connection;
@@ -49,24 +47,6 @@ class Queue extends Object implements QueueInterface
             'created_at' => time(),
         ])->execute();
         return $this->db->lastInsertID;
-    }
-
-    /**
-     * 批量推送消息到队列
-     * @param array $messages
-     * @param int $delay
-     * @return false|string
-     */
-    public function BatchSendMessage($messages, $delay = 0)
-    {
-        $successCount = 0;
-        foreach ($messages as $key => $message) {
-            if ($this->sendMessage($message, $delay)) {
-                $successCount++;
-            }
-
-        }
-        return $successCount;
     }
 
     /**

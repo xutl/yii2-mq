@@ -8,7 +8,6 @@ namespace xutl\mq\redis;
 
 use yii\base\Object;
 use yii\helpers\Json;
-use xutl\mq\QueueInterface;
 use Predis\Client;
 use Predis\Transaction\MultiExec;
 
@@ -16,7 +15,7 @@ use Predis\Transaction\MultiExec;
  * Class Queue
  * @package xutl\mq\redis
  */
-class Queue extends Object implements QueueInterface
+class Queue extends \xutl\mq\Queue
 {
     /**
      * @var Client;
@@ -48,24 +47,6 @@ class Queue extends Object implements QueueInterface
             $this->client->rpush($this->queueName, [$payload]);
         }
         return $id;
-    }
-
-    /**
-     * 批量推送消息到队列
-     * @param array $messages
-     * @param int $delay
-     * @return false|string
-     */
-    public function BatchSendMessage($messages, $delay = 0)
-    {
-        $successCount = 0;
-        foreach ($messages as $key => $message) {
-            if ($this->sendMessage($message, $delay)) {
-                $successCount++;
-            }
-
-        }
-        return $successCount;
     }
 
     /**

@@ -7,16 +7,14 @@
 namespace xutl\mq\awsqs;
 
 use Yii;
-use yii\base\Object;
 use yii\helpers\Json;
-use xutl\mq\QueueInterface;
 use Aws\Sqs\SqsClient;
 
 /**
  * Class Queue
  * @package xutl\message\alimns
  */
-class Queue extends Object implements QueueInterface
+class Queue extends \xutl\mq\Queue
 {
     /**
      * @var SqsClient;
@@ -41,23 +39,6 @@ class Queue extends Object implements QueueInterface
             'MessageBody' => $message,
             'DelaySeconds' => $delay,
         ])->get('MessageId');
-    }
-
-    /**
-     * @param array $messages
-     * @param int $delay
-     * @return false|string
-     */
-    public function BatchSendMessage($messages, $delay = 0)
-    {
-        foreach ($messages as $key => $message) {
-            $messages[$key] = [
-                'QueueUrl' => $this->queueName,
-                'MessageBody' => Json::encode($message),
-                'DelaySeconds' => $delay,
-            ];
-        }
-        return $this->client->sendMessageBatch($messages)->get('MessageId');
     }
 
     /**

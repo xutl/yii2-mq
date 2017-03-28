@@ -10,7 +10,6 @@ namespace xutl\mq\alimns;
 use Yii;
 use yii\base\Object;
 use yii\helpers\Json;
-use xutl\mq\QueueInterface;
 use AliyunMNS\Queue as QueueBackend;
 use AliyunMNS\Requests\SendMessageRequest;
 use AliyunMNS\Exception\MnsException;
@@ -20,7 +19,7 @@ use AliyunMNS\Requests\BatchSendMessageRequest;
  * Class Queue
  * @package xutl\message\alimns
  */
-class Queue extends Object implements QueueInterface
+class Queue extends \xutl\mq\Queue
 {
     /**
      * @var \AliyunMNS\Http\HttpClient;
@@ -76,16 +75,16 @@ class Queue extends Object implements QueueInterface
      * @param int $delay
      * @return false|string
      */
-    public function BatchSendMessage($messages, $delay = 0)
+    public function batchSendMessage($messages, $delay = 0)
     {
         foreach ($messages as $key => $message) {
             $messages[$key] = Json::encode($message);
         }
         $request = new BatchSendMessageRequest($messages, $this->base64);
         try {
-            $response = $this->queue->sendMessage($request);
+            $response = $this->queue->batchSendMessage($request);
             if ($response->isSucceed()) {
-                return $response->getMessageId();
+                return $response->getSendMessageResponseItems();
             } else {
                 return false;
             }
