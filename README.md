@@ -45,7 +45,7 @@ to the require section of your `composer.json` file.
 ###组件配置
 ````php
 //使用Redis
-'mq' => [
+'queue' => [
     'class' => 'xutl\mq\redis\Client',
                 'redis' => [
                     'scheme' => 'tcp',
@@ -57,14 +57,14 @@ to the require section of your `composer.json` file.
 ],
 
 //使用AWS SQS
-'mq' => [
+'queue' => [
     'class' => 'xutl\mq\awsqs\Client',
                 'sqs' => [
                     //etc
                 ],
 ],
 //使用阿里MNS
-'mq' => [
+'queue' => [
    'class' => 'xutl\mq\alimns\Client',
                'endPoint' => '',
                'accessId'=>'',
