@@ -4,19 +4,22 @@
  * @copyright Copyright (c) 2012 TintSoft Technology Co. Ltd.
  * @license http://www.tintsoft.com/license/
  */
+
 namespace xutl\mq;
 
-use yii\base\Arrayable;
 use yii\base\Object;
-use yii\base\ArrayableTrait;
+use yii\helpers\Json;
 
 /**
  * Class Message
  * @package xutl\mq
  */
-class Message extends Object implements Arrayable
+class Message extends Object
 {
-    use ArrayableTrait;
+    /**
+     * @var Queue 所属队列实例
+     */
+    public $queue;
 
     /**
      * @var string 消息ID
@@ -29,12 +32,33 @@ class Message extends Object implements Arrayable
     public $messageBody;
 
     /**
-     * @var string 消息内容
+     * @var string 消息句柄
      */
     public $receiptHandle;
 
     /**
-     * @var string 所属队列
+     * 获取消息ID
+     * @return string
      */
-    public $queue;
+    public function getId()
+    {
+        return $this->messageId;
+    }
+
+    /**
+     * 获取消息详情
+     */
+    public function getBody()
+    {
+        return Json::decode($this->messageBody);
+    }
+
+    /**
+     * 删除消息
+     * @return bool
+     */
+    public function delete()
+    {
+        return $this->queue->deleteMessage($this->receiptHandle);
+    }
 }
