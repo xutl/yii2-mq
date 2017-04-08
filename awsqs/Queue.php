@@ -6,6 +6,7 @@
  */
 namespace xutl\mq\awsqs;
 
+use xutl\mq\Message;
 use Yii;
 use yii\helpers\Json;
 use Aws\Sqs\SqsClient;
@@ -43,7 +44,7 @@ class Queue extends \xutl\mq\Queue
 
     /**
      * 获取消息
-     * @return array|bool
+     * @return Message|bool
      */
     public function receiveMessage()
     {
@@ -52,15 +53,13 @@ class Queue extends \xutl\mq\Queue
         if (empty($response['Messages'])) {
             return false;
         }
-
         $data = reset($response['Messages']);
-
-        return [
+        return new Message([
             'messageId' => $data['MessageId'],
             'messageBody' => $data['Body'],
-            'queue' => $this->queueName,
+            'queue' => $this->queue,
             'receiptHandle' => $data['ReceiptHandle'],
-        ];
+        ]);
     }
 
     /**

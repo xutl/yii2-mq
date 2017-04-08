@@ -43,12 +43,12 @@ abstract class Queue extends Object
 
     /**
      * 消费消息
-     * @return array
+     * @return Message
      */
     abstract public function receiveMessage();
 
     /**
-     * 批量消费消息\
+     * 批量消费消息
      * @param int $num 本次获取的消息数量
      * @return array
      */

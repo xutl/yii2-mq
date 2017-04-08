@@ -70,24 +70,6 @@ to the require section of your `composer.json` file.
                'accessId'=>'',
                'accessKey'=>'',
 ],        
-//DB模拟
-'mq' => [
-    'class' => 'xutl\mq\db\Client',
-                'db' => 'db',
-],
-
-//DB模拟2
-'mq' => [
-    'class' => 'xutl\mq\db\Client',
-                'db' => [
-                    'class' => 'yii\db\Connection',
-                    'dsn' => 'mysql:host=localhost;dbname=yuncms',
-                    'username' => 'root',
-                    'password' => '',
-                    'charset' => 'utf8',
-                    'tablePrefix' => 'yun_',
-                ],
-],
 ````
 
 使用
@@ -95,29 +77,24 @@ to the require section of your `composer.json` file.
 
 ```php
 
-/** @var \xutl\mq\alimns\Client $mq */
-$mq = Yii::$app->get('mq');
-$queue = $message->getQueueRef('default');
-
-$m = [
-    'event' => 'mail.sent',//上面有监听处理程序，
-    //etc...
-];
 //入队
-for ($i = 1; $i <= 500; $i++) {
-    $queue->sendMessage($m,10);
+/** @var \xutl\mq\Queue $queue */
+$queue = Yii::$app->queue->getQueueRef('mailer');
+for ($i = 0; $i < 500; $i++) {
+    $queue->sendMessage([
+        'aaa'=>'bbb',
+    ]);
 }
 
-for ($i = 1; $i <= 500; $i++) {
-    $message = $queue->receiveMessage();
-    //此处处理消息
-    /////..
-    
-    
-    //删除消息
-    $queue->deleteMessage($message['receiptHandle']);
-}
-        
+//出队
+/** @var \xutl\mq\Queue $queue */
+$queue = Yii::$app->queue->getQueueRef('mailer');
+/** @var \xutl\mq\Message $message */
+while (($message = $queue->receiveMessage()) !== false) {
+    $body = $message->getBody();
+    var_dump($body);
+    $message->delete();
+}  
 ```
 
 知乎上这篇甩锅我给我很大的启发。

@@ -8,8 +8,8 @@
 namespace xutl\mq\alimns;
 
 use Yii;
-use yii\base\Object;
 use yii\helpers\Json;
+use xutl\mq\Message;
 use AliyunMNS\Queue as QueueBackend;
 use AliyunMNS\Requests\SendMessageRequest;
 use AliyunMNS\Exception\MnsException;
@@ -37,6 +37,9 @@ class Queue extends \xutl\mq\Queue
      */
     public $queueName;
 
+    /**
+     * @var bool 是否将消息体Base64后发送
+     */
     public $base64 = true;
 
     /**
@@ -101,19 +104,19 @@ class Queue extends \xutl\mq\Queue
 
     /**
      * 获取消息
-     * @return array|bool
+     * @return Message|bool
      */
     public function receiveMessage()
     {
         try {
             $response = $this->queue->receiveMessage(30);
             if ($response->isSucceed()) {
-                return [
+                return new Message([
                     'messageBody' => Json::decode($response->getMessageBody()),
                     'messageId' => $response->getMessageId(),
                     'receiptHandle' => $response->getReceiptHandle(),
-                    'queue' => $this->queueName
-                ];
+                    'queue' => $this->queue
+                ]);
             } else {
                 return false;
             }

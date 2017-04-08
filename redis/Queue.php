@@ -4,8 +4,10 @@
  * @copyright Copyright (c) 2012 TintSoft Technology Co. Ltd.
  * @license http://www.tintsoft.com/license/
  */
+
 namespace xutl\mq\redis;
 
+use xutl\mq\Message;
 use yii\base\Object;
 use yii\helpers\Json;
 use Predis\Client;
@@ -51,7 +53,7 @@ class Queue extends \xutl\mq\Queue
 
     /**
      * 获取消息
-     * @return array|bool
+     * @return Message|bool
      */
     public function receiveMessage()
     {
@@ -81,12 +83,12 @@ class Queue extends \xutl\mq\Queue
         $receiptHandle = $data;
         $data = Json::decode($data);
 
-        return [
+        return new Message([
             'messageId' => $data['id'],
             'messageBody' => $data['body'],
             'receiptHandle' => $receiptHandle,
-            'queue' => $this->queueName,
-        ];
+            'queue' => $this->queue,
+        ]);
     }
 
     /**

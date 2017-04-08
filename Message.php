@@ -50,7 +50,16 @@ class Message extends Object
      */
     public function getBody()
     {
-        return Json::decode($this->messageBody);
+        return $this->messageBody;
+    }
+
+    /**
+     * 修改消息可见时间
+     * @param int $delay
+     */
+    public function release($delay = 60)
+    {
+        $this->queue->changeMessageVisibility($this->queue, $delay);
     }
 
     /**
