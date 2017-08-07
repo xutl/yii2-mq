@@ -1,7 +1,8 @@
-# yii2-message
-适用于Yii2的消息服务组件
+# yii2-mns
 
-非任务队列，也不是短消息那种私信组件，这是个纯消息组件。本来我是想做队列，我看了laravel,以及yii2其他人做的队列任务组件，我发现，
+适用于Yii2的消息服务组件，支持阿里云的MNS，AWS的SQS，以及Redis。
+
+特别说明：非任务队列，也不是短消息那种私信组件，这是个纯消息组件。本来我是想做队列，我看了laravel,以及yii2其他人做的队列任务组件，我发现，
 他们下发任务的时候要么发个闭包，要么发个序列化的类，包括我之前做的一个队列组件也是这么做的，后来我看了阿里云的消息队列服务的开发者
 文档我觉得，消息服务本质上就是个纯消息服务，没必要把任务也放里面，一条消息就是一个普通的JSON字符串就行了，就像微信的公众号接收
 服务端消息一样，接到消息干什么，怎么干我觉得是客户端的事。
@@ -19,12 +20,10 @@
 4、在消息消费完，你需要手动删除该消息。
 
 以上概念是按照 阿里云的 
-https://help.aliyun.com/document_detail/27414.html?spm=5176.7944397.215405.1.hrJBcV 实现的
+https://help.aliyun.com/document_detail/27414.html 实现的
 
-支持阿里云的MNS，AWS的SQS，以及Redis。
+## 安装
 
-安装
-----
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
@@ -37,12 +36,13 @@ php composer.phar require --prefer-dist xutl/yii2-mq
 or add
 
 ```
-"xutl/yii2-mq": "~1.0"
+"xutl/yii2-mq": "~1.0.0"
 ```
 
 to the require section of your `composer.json` file.
    
-###组件配置
+## 组件配置
+
 ````php
 //使用Redis
 'queue' => [
@@ -72,8 +72,7 @@ to the require section of your `composer.json` file.
 ],        
 ````
 
-使用
-----
+## 使用
 
 ```php
 
