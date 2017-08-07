@@ -4,10 +4,11 @@
   "keywords": [
     "yii2",
     "message",
-    "queue"
+    "queue",
+    "aliyun"
   ],
   "type": "yii2-extension",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "authors": [
     {
       "name": "X TL",
@@ -15,10 +16,10 @@
     }
   ],
   "require": {
-    "yiisoft/yii2": "~2.0",
-    "xutl/aliyunmns": "~1.0"
+    "yiisoft/yii2": "~2.0.6"
   },
   "require-dev": {
+    "xutl/aliyunmns": "~1.0",
     "aws/aws-sdk-php": "~3.0",
     "predis/predis": "~1.0"
   },

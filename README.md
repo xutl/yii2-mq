@@ -22,8 +22,10 @@
 以上概念是按照 阿里云的 
 https://help.aliyun.com/document_detail/27414.html 实现的
 
-## 安装
+知乎上这篇甩锅我给我很大的启发。
+https://zhuanlan.zhihu.com/p/25192112
 
+## 安装
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
@@ -93,8 +95,10 @@ while (($message = $queue->receiveMessage()) !== false) {
     $body = $message->getBody();
     var_dump($body);
     $message->delete();
-}  
+}
 ```
 
-知乎上这篇甩锅我给我很大的启发。
-https://zhuanlan.zhihu.com/p/25192112
+## License
+
+This is released under the MIT License. See the bundled [LICENSE.md](LICENSE.md)
+for details.

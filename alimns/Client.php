@@ -4,6 +4,7 @@
  * @copyright Copyright (c) 2012 TintSoft Technology Co. Ltd.
  * @license http://www.tintsoft.com/license/
  */
+
 namespace xutl\mq\alimns;
 
 use Yii;
@@ -45,10 +46,10 @@ class Client extends Component implements ClientInterface
      */
     private $client;
 
-	/**
+    /**
      * @var bool 是否开启Base 64
      */
-	public $base64 = true;
+    public $base64 = true;
 
     /**
      * @inheritdoc
