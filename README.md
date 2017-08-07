@@ -1,6 +1,15 @@
-# yii2-mns
+# yii2-mq
 
 适用于Yii2的消息服务组件，支持阿里云的MNS，AWS的SQS，以及Redis。
+
+[![Latest Stable Version](https://poser.pugx.org/xutl/yii2-mq/v/stable.png)](https://packagist.org/packages/xutl/yii2-mq)
+[![Total Downloads](https://poser.pugx.org/xutl/yii2-mq/downloads.png)](https://packagist.org/packages/xutl/yii2-mq)
+[![Reference Status](https://www.versioneye.com/php/xutl:yii2-mq/reference_badge.svg)](https://www.versioneye.com/php/xutl:yii2-mq/references)
+[![Build Status](https://img.shields.io/travis/xutl/yii2-mq.svg)](http://travis-ci.org/xutl/yii2-mq)
+[![Dependency Status](https://www.versioneye.com/php/xutl:yii2-mq/dev-master/badge.png)](https://www.versioneye.com/php/xutl:yii2-mq/dev-master)
+[![License](https://poser.pugx.org/xutl/yii2-mq/license.svg)](https://packagist.org/packages/xutl/yii2-mq)
+
+
 
 特别说明：非任务队列，也不是短消息那种私信组件，这是个纯消息组件。本来我是想做队列，我看了laravel,以及yii2其他人做的队列任务组件，我发现，
 他们下发任务的时候要么发个闭包，要么发个序列化的类，包括我之前做的一个队列组件也是这么做的，后来我看了阿里云的消息队列服务的开发者
