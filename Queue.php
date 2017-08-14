@@ -8,13 +8,13 @@
 namespace xutl\mq;
 
 use Yii;
-use yii\base\BaseObject;
+use yii\base\Object;
 
 /**
  * 队列基类
  * @package xutl\mq
  */
-abstract class Queue extends BaseObject
+abstract class Queue extends Object
 {
     /**
      * 发送消息
