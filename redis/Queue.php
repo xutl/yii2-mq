@@ -87,7 +87,7 @@ class Queue extends \xutl\mq\Queue
             'messageId' => $data['id'],
             'messageBody' => $data['body'],
             'receiptHandle' => $receiptHandle,
-            'queue' => $this->queue,
+            'queue' => $this,
         ]);
     }
 
