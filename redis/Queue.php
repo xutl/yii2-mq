@@ -8,7 +8,7 @@
 namespace xutl\mq\redis;
 
 use xutl\mq\Message;
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\helpers\Json;
 use Predis\Client;
 use Predis\Transaction\MultiExec;
