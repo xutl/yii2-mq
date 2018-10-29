@@ -7,13 +7,13 @@
 
 namespace xutl\mq;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class Message
  * @package xutl\mq
  */
-class Message extends Object
+class Message extends BaseObject
 {
     /**
      * @var Queue 所属队列实例
